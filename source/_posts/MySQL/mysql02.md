@@ -1,5 +1,5 @@
 ---
-title: 数据库MySQL入门之表的建立及查询
+title: 数据库MySQL入门之表的建立及查询及全文搜索
 tags: [MySQL]
 ---
 **数据表相关：**
@@ -14,6 +14,8 @@ tags: [MySQL]
 SELECT DISTINCT ven_id  FROM products;
 注：一些书写的规范：
 **SQL关键字使用大写，对所有的列名和表名使用小写；**
+
+<!--more -->
 6.限制结果：
 SELECT prod_name FROM products LIMIT 5； 返回不多于5行的结果；
 SELECT prod_name FROM products LIMIT 5，5； 返回第6行开始不多于5行的结果；
@@ -118,7 +120,7 @@ MySQL数据库引擎分类：常用的有MyISAM和InNoDB，前者支持全文本
 CREAT TABLE a{
   ...
 } ENGINE=MyISAM;
-使用全文搜索：
+***使用全文搜索：***
 1.使用FULLTEXT(columName)会对对应的列进行索引；
 2.使用Match()和Against()执行全文本搜索；
 3.Match(xx)指定xx列，Against('yy')指定搜索的表达式。
