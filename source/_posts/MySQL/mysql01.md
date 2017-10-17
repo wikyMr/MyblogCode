@@ -23,3 +23,10 @@ JOIN select day,count(Point) from users where point<0;
 写下这个语句的时候，仿佛就是在念咒语，因为这个东西太那个难理解了，语句虽然简单，然而多种语句组合起来，
 你就会知道这些东西并不会得到你所期望的结果，关键还有就是这东西没办法调试；
 好吧吐槽归吐槽，然而我还是要去研究一下这个数据库的玄妙的语句，特别是查询语句吧；
+```
+
+SELECT date,COUNT(IF(point>=60,1,NULL)) AS "成功通过人数",
+COUNT(IF(point<60,1,NULL)) AS "失败人数"
+FROM mytest GROUP BY date;
+
+```
