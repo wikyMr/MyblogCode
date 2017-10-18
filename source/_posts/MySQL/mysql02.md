@@ -79,21 +79,6 @@ WITH ROLLUP是什么意思？
 ***过滤分组***
 WHERE过滤行，HAVING过滤分组；事实上，目前为止，所学的所有类型的WHERE字句都可以用HAVING来替代。
 
-不懂的地方：
-test:
-| id         | gid  | 
-| --------   | -----: | 
-| 001        | 13     |  
-| 002        | 13     |  
-| 003        | 14     | 
-| 004        | 14     | 
-| 005        | 13     |  
-SELECT pid,COUNT(*) FROM test
-HAVING COUNT(pid)>0
-结果：
-| pid         | COUNT(*) | 
-| --------    | -----:   | 
-| 13          | 5        |
 
 ***联结表***：
 CROSS JOIN：两个表的笛卡尔积;
