@@ -33,6 +33,10 @@ public static void merge(int[] nums1, int m, int[] nums2, int n) {
 ```
 <!-- more -->
 ### 这道题比较的奇葩：统计两个数字相差k的数字对的数目，要求每个数字对是唯一的，且i，j与j，i算一对；
+1. 统计每个数字出现的频次;
+2.对每个数字，分两种情况：
+1.k=0,统计数字频率大于等于2的数字即可；
+2.k>0，统计所有数字有多少数字加上k的值存在于该数据结构里面即可
 ```
 	public static int findPairs(int[] nums, int k) {
 	 if(nums.length<0||k>1000||k<0) return 0;
@@ -102,4 +106,115 @@ public static void merge(int[] nums1, int m, int[] nums2, int n) {
 		return t1>t2 ?t1 :t2;
 		// 改进：return Math.max(max1*max2*max3,min1*min2*max1);
     }
+```
+### 有序数组寻找插入的位置：
+思路：数组有序，那么二分查找是最快的，这实际上就是二分查找的变形：
+```
+if(target<nums[0]) return 0;
+		 if(target>nums[nums.length-1]) return nums.length;
+	        int low=0,high=nums.length-1;
+	        while(low<=high){
+	        	if(low==high) return low;
+	        	int middle=(low+high)/2;
+	        	if(nums[middle]==target) return middle;
+	        	if(target>nums[middle]){
+	        		if(target<nums[middle+1]){
+	        			return middle+1;
+	        		}else if(target>nums[middle+1]){
+	        			low=middle+1;
+	        		}else{
+	        			return middle+1;
+	        		}
+	        	}else if(target<nums[middle]){
+	        		if(target<nums[middle-1]){
+	        				high=middle-1;
+	        		}else if(target>nums[middle-1]){
+	        			return middle;
+	        		}else{
+	        			return middle-1;
+	        		}
+	        	}
+	        }
+	        return -1;
+	```
+解法二：
+```
+int low=0,high=nums.length-1;
+        while(low<=high){
+            int middle=(low+high)/2;
+            if(target==nums[middle]) return middle;
+            if(target<nums[middle]){
+                high=middle-1;
+            }else{
+                low=middle+1;
+            }
+        }
+        return low;
+```
+## 查找出现频率最高的数字的首尾两次出现差值为最小的子数组的长度
+
+思路：统计每个数字的频次，找到最大频次的数字数组，再依次找到最左和最右的下标的差值，找到差值的最小值；
+时间复杂度O(n*m)，n为数组大小，m为频率最高的数字数组的大小，最坏情况会去到O(n*n)；
+```
+ Map<Integer,Integer> numtimes=new HashMap<Integer,Integer>();
+	        for(int i=0;i<nums.length;i++){
+	            numtimes.put(nums[i],numtimes.getOrDefault(nums[i],0)+1);
+	        }
+	        int max=Integer.MIN_VALUE;
+	        for(Map.Entry<Integer,Integer> node: numtimes.entrySet()){
+	        	//System.out.println(node.getKey()+":"+node.getValue());
+	            if(node.getValue()>max){
+	                max=node.getValue();
+	            }
+	        }
+	        //System.out.println(max);
+	        List<Integer> maxlist=new ArrayList<Integer>();
+	        for(Map.Entry<Integer,Integer> node: numtimes.entrySet()){
+	            if(node.getValue()==max){
+	                maxlist.add(node.getKey());
+	            }
+	        }
+	        //System.out.println(maxlist);
+	        int minlen=Integer.MAX_VALUE;
+	        int front=0,last=0;
+	        for(Integer t: maxlist){
+	        	for(int i=0;i<nums.length;i++){
+	        		if(nums[i]==t){
+	        			front=i;
+	        			break;
+	        		}
+	        	}
+	        	for(int j=nums.length-1;j>0;j--){
+	        		if(nums[j]==t){
+	        			last=j;
+	        			break;
+	        		}
+	        	}
+	        	minlen=Math.min(minlen,last-front+1);
+	        }
+	       return minlen; 
+```
+用O(3*n)的空间保存每个数字的最左出现和最右出现的下标，以及每个数字的出现频次，然后根据最大频次出现的数字找最小的子数组长度（最左出现和最右出现的下标的差值）;
+```
+Map<Integer,Integer> left=new HashMap<Integer,Integer>();
+	        Map<Integer,Integer> right=new HashMap<Integer,Integer>();
+	        Map<Integer,Integer> counts=new HashMap<Integer,Integer>();
+	        for(int i=0;i<nums.length;i++){
+	            int n=nums[i];
+	            if(left.get(n)==null) left.put(n,i);
+	            right.put(n,i);
+	            counts.put(n,counts.getOrDefault(n,0)+1);
+	        }
+	        //System.out.println(counts);
+	        int maxcnt=Integer.MIN_VALUE;
+	        int minlen=Integer.MAX_VALUE;
+	        for(Map.Entry<Integer,Integer> ct: counts.entrySet()){
+	        	if(ct.getValue()>maxcnt){
+	        		maxcnt=ct.getValue();
+	        		minlen=right.get(ct.getKey())-left.get(ct.getKey())+1;
+	        	}else if(ct.getValue()==maxcnt){
+	        		minlen=Math.min(minlen,right.get(ct.getKey())-left.get(ct.getKey())+1);
+	        	}  
+	        }
+	        return minlen;
 ```
